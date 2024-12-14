@@ -5,7 +5,6 @@ import Image from "next/image";
 
 export default function Home() {
     return (
-        <>
             <Container className="px-4 md:px-12">
 
                 {/* Hero Banner Section */}
@@ -97,6 +96,5 @@ export default function Home() {
 
                 
             </Container>
-        </>
     );
 }
