@@ -3,12 +3,13 @@ import Link from "next/link";
 import { UserButton } from "@clerk/nextjs";
 import { cn } from "@/lib/utils";
 import Container from "./container";
+import {checkRole} from "@/lib/roles.ts";
 
 interface HeaderProps {
     userId: string | null;
 }
 
-export default function Header({ userId }: HeaderProps) {
+export default async function Header({userId}: HeaderProps) {
     return (
         <header className={cn("w-full z-50 transition")}>
             <Container className="relative px-4 sm:px-6 lg:px-12 flex h-16 items-center justify-between">
@@ -22,7 +23,14 @@ export default function Header({ userId }: HeaderProps) {
                         </Button>
                     ))}
                     {userId ? (
-                        <UserButton afterSwitchSessionUrl="/" />
+                        <>
+                            <UserButton afterSwitchSessionUrl="/"/>
+                            {await checkRole('admin') && (
+                                <Button asChild variant="link">
+                                    <Link href="/admin">Dashboard</Link>
+                                </Button>
+                            )}
+                        </>
                     ) : (
                         <div className="flex items-center space-x-2 ml-4">
                             <Button asChild variant="link">
