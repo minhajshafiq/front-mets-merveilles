@@ -63,6 +63,53 @@ export default function Home() {
                 </section>
 
                 {/* Why Us Section */}
+                <section className="py-16">
+                    <div className="text-center mb-12">
+                        <h2 className="text-4xl font-bold tracking-wider text-neutral-700 mb-4">
+                            Pourquoi choisir notre restaurant ?
+                        </h2>
+                        <p className="text-lg text-neutral-600 max-w-2xl mx-auto">
+                            Chez Mets & Merveilles, nous nous engageons à vous offrir une expérience culinaire inoubliable avec des produits de qualité, une cuisine traditionnelle et un service rapide. Découvrez ce qui fait notre différence !
+                        </p>
+                    </div>
+
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-7xl mx-auto px-4">
+                        {/* Card 1 - Fresh Ingredients */}
+                        <div className="bg-white shadow-lg rounded-lg p-6 text-center">
+                            <div className="flex justify-center items-center mb-4">
+                                <i className="fas fa-lemon text-4xl text-green-500">Icon 1</i>
+                            </div>
+                            <h3 className="text-2xl font-semibold text-neutral-700 mb-2">Ingrédients frais</h3>
+                            <p className="text-neutral-600">
+                                Nous utilisons uniquement des ingrédients frais et de saison, provenant directement des producteurs locaux, pour garantir la meilleure qualité dans chaque plat.
+                            </p>
+                        </div>
+
+                        {/* Card 2 - Authentic Cuisine */}
+                        <div className="bg-white shadow-lg rounded-lg p-6 text-center">
+                            <div className="flex justify-center items-center mb-4">
+                                <i className="fas fa-spoon text-4xl text-yellow-500"> Icon 2</i>
+                            </div>
+                            <h3 className="text-2xl font-semibold text-neutral-700 mb-2">Cuisine authentique</h3>
+                            <p className="text-neutral-600">
+                                Chaque plat est préparé avec des recettes traditionnelles et un savoir-faire ancestral, afin de vous offrir une expérience culinaire véritablement authentique.
+                            </p>
+                        </div>
+
+                        {/* Card 3 - Fast Service */}
+                        <div className="bg-white shadow-lg rounded-lg p-6 text-center">
+                            <div className="flex justify-center items-center mb-4">
+                                <i className="fas fa-clock text-4xl text-red-500"> Icon 3 </i>
+                            </div>
+                            <h3 className="text-2xl font-semibold text-neutral-700 mb-2">Service rapide</h3>
+                            <p className="text-neutral-600">
+                                Nous savons que votre temps est précieux. C&#39;est pourquoi nous nous engageons à vous servir rapidement sans compromettre la qualité de nos plats.
+                            </p>
+                        </div>
+                    </div>
+                </section>
+
+
 
 
             </Container>

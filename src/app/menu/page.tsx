@@ -1,4 +1,5 @@
-"use client";
+'use client'
+
 import { useState, useEffect } from "react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
@@ -62,7 +63,7 @@ export default function MenuPage() {
                         <ul className="space-y-2">
                             <li>
                                 <Button
-                                    variant={selectedCategory === "" ? "solid" : "outline"}
+                                    variant={selectedCategory === "" ? "default" : "outline"}
                                     onClick={() => setSelectedCategory("")}
                                     className="w-full"
                                 >
@@ -72,9 +73,7 @@ export default function MenuPage() {
                             {categories.map((category) => (
                                 <li key={category}>
                                     <Button
-                                        variant={
-                                            selectedCategory === category ? "solid" : "outline"
-                                        }
+                                        variant={selectedCategory === category ? "default" : "outline"}
                                         onClick={() => setSelectedCategory(category)}
                                         className="w-full"
                                     >
