@@ -22,6 +22,7 @@ const geistMono = localFont({
 export const metadata: Metadata = {
     title: "Mets & Merveilles",
     description: "Application Full-Stack de Restauration",
+    icons: "images/favicon_mets-merveilles.png",
 };
 
 type RootLayoutProps = {
