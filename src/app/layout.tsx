@@ -1,22 +1,22 @@
-import type { Metadata } from "next";
-import { ClerkProvider } from "@clerk/nextjs";
-import Image from "next/image";
-import localFont from "next/font/local";
+import type {Metadata} from "next";
+import {ClerkProvider} from "@clerk/nextjs";
 import Header from "@/components/header";
 import Footer from "@/components/footer";
 import "./globals.css";
-import { auth } from "@clerk/nextjs/server";
+import {auth} from "@clerk/nextjs/server";
+import {Instrument_Sans, Poppins} from "@next/font/google";
+import Image from "next/image";
 
-const geistSans = localFont({
-    src: "./fonts/GeistVF.woff",
-    variable: "--font-geist-sans",
-    weight: "100 900",
+const instrumentSans = Instrument_Sans({
+    subsets: ["latin"],
+    weight:  ["400", "500", "600", "700"],
+    style: "normal",
 });
 
-const geistMono = localFont({
-    src: "./fonts/GeistMonoVF.woff",
-    variable: "--font-geist-mono",
-    weight: "100 900",
+const poppins = Poppins({
+    subsets: ["latin"],
+    weight:  ["400", "500", "600", "700"],
+    style: "normal",
 });
 
 export const metadata: Metadata = {
@@ -32,31 +32,31 @@ type RootLayoutProps = {
 export default async function RootLayout({
                                              children,
                                          }: Readonly<RootLayoutProps>): Promise<JSX.Element> {
-    const { userId } = await auth(); // Await ici car `auth()` est une promesse.
+    const {userId} = await auth(); // Await ici car `auth()` est une promesse.
 
     return (
         <ClerkProvider>
             <html lang="en">
             <body
-                className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+                className={`${instrumentSans.className} ${poppins.className} antialiased`}
             >
             {/* Hero Image */}
             <Image
                 src="/images/hero.svg"
-                className="absolute -z-10 top-0 right-0 w-full md:w-[60%]"
+                className="hidden lg:block absolute -z-10 top-0 right-0 w-full md:w-[60%]"
                 alt="Hero Banner"
                 width={800}
                 height={800}
             />
 
             {/* Header */}
-            <Header userId={userId} />
+            <Header userId={userId}/>
 
             {/* Main Content */}
             {children}
 
             {/* Footer */}
-            <Footer />
+            <Footer/>
             </body>
             </html>
         </ClerkProvider>

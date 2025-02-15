@@ -9,7 +9,14 @@ const config: Config = {
   ],
   theme: {
   	extend: {
+		fontFamily: {
+			instrumentSans: ['Instrument Sans', 'sans-serif'],
+			poppins: ['Poppins', 'sans-serif'],
+		},
   		colors: {
+			colors: {
+				titleGreen: "#22C55E",
+			},
   			background: 'hsl(var(--background))',
   			foreground: 'hsl(var(--foreground))',
   			card: {
