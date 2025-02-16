@@ -1,4 +1,5 @@
-'use client'
+'use client';
+import { Search, Plus } from 'lucide-react';
 import { useState, useEffect } from "react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
@@ -11,10 +12,10 @@ export default function MenuPage() {
 
     const categories = ["Entrées", "Plats", "Desserts", "Boissons"];
     const menus = [
-        { id: 1, name: "Menu 1", category: "Entrées", image: "/images/plat.jpg", description: "Délicieuse entrée aux saveurs méditerranéennes.", price: "12.99€" },
-        { id: 2, name: "Menu 2", category: "Plats", image: "/images/plat.jpg", description: "Un plat principal généreux et savoureux.", price: "18.50€" },
-        { id: 3, name: "Menu 3", category: "Desserts", image: "/images/plat.jpg", description: "Un dessert gourmand pour finir en beauté.", price: "7.99€" },
-        { id: 4, name: "Menu 4", category: "Boissons", image: "/images/plat.jpg", description: "Une boisson rafraîchissante pour accompagner votre repas.", price: "4.50€" },
+        { id: 1, name: "Pizza Margherita", category: "Plats", image: "/images/pizza.jpg", description: "Tomate, mozzarella, basilic frais", price: "19$" },
+        { id: 2, name: "Pâtes Carbonara", category: "Plats", image: "/images/pates.jpg", description: "Crème, lardons, parmesan", price: "18.50€" },
+        { id: 3, name: "Tiramisu", category: "Desserts", image: "/images/tiramisu.jpg", description: "Dessert italien au mascarpon", price: "7.99€" },
+        { id: 4, name: "Salade César", category: "Boissons", image: "/images/salade.jpg", description: "Poulet, croûtons, sauce César", price: "4.50€" },
     ];
 
     const filteredMenus = menus.filter(
@@ -33,7 +34,7 @@ export default function MenuPage() {
     }, []);
 
     return (
-        <div className="min-h-screen">
+        <div className="min-h-screen px-8">
             {showNavbar && (
                 <div className="fixed top-0 left-0 w-full backdrop-blur-md bg-opacity-70 shadow-md p-4 z-50">
                     <div className="max-w-5xl mx-auto flex justify-between items-center">
@@ -44,74 +45,61 @@ export default function MenuPage() {
             )}
 
             <div className="max-w-5xl mx-auto py-10 space-y-6">
-                <div className="flex justify-center">
-                    <Input
-                        type="text"
-                        placeholder="Rechercher un menu"
-                        value={search}
-                        onChange={(e) => setSearch(e.target.value)}
-                        className="w-full max-w-lg"
-                    />
+                <div className="flex flex-col items-center space-y-4">
+                    <div className="relative w-full max-w-lg">
+                        <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500" size={20} />
+                        <Input
+                            type="text"
+                            placeholder="Rechercher un menu"
+                            value={search}
+                            onChange={(e) => setSearch(e.target.value)}
+                            className="w-full pl-10 pr-4 py-2 rounded-full border border-gray-300 focus:ring-2 focus:ring-green-500 focus:outline-none"
+                        />
+                    </div>
+                    <div className="flex overflow-x-auto">
+                        <Button
+                            variant={selectedCategory === "" ? "ghost" : "link"}
+                            onClick={() => setSelectedCategory("")}
+                            className={`text-sm ${selectedCategory === "" ? "font-bold" : "border-0"}`}
+                        >
+                            Toutes
+                        </Button>
+                        {categories.map((category) => (
+                            <Button
+                                className={`text-sm ${selectedCategory === category ? "font-bold" : "border-0"}`}
+                                key={category}
+                                variant={selectedCategory === category ? "ghost" : "link"}
+                                onClick={() => setSelectedCategory(category)}
+                            >
+                                {category}
+                            </Button>
+                        ))}
+                    </div>
+
                 </div>
 
-                <div className="flex">
-                    <aside className="w-1/4 bg-white rounded shadow-md p-4">
-                        <h2 className="text-lg font-semibold mb-4">Catégories</h2>
-                        <ul className="space-y-2">
-                            <li>
-                                <Button
-                                    variant={selectedCategory === "" ? "default" : "outline"}
-                                    onClick={() => setSelectedCategory("")}
-                                    className="w-full"
-                                >
-                                    Toutes
-                                </Button>
-                            </li>
-                            {categories.map((category) => (
-                                <li key={category}>
-                                    <Button
-                                        variant={selectedCategory === category ? "default" : "outline"}
-                                        onClick={() => setSelectedCategory(category)}
-                                        className="w-full"
-                                    >
-                                        {category}
-                                    </Button>
-                                </li>
-                            ))}
-                        </ul>
-                    </aside>
-
-                    <main className="flex-1 ml-6">
-                        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-                            {filteredMenus.map((menu) => (
-                                <div key={menu.id}
-                                     className="relative rounded-lg overflow-hidden group hover:scale-105 transition-transform duration-300 cursor-pointer hover:shadow-xl hover:-translate-y-1">
-                                    <div className="h-[250px] w-full min-w-[350px] relative">
-                                        <Image src={menu.image} alt={menu.name} fill
-                                               className="object-cover rounded-lg group-hover:opacity-80 transition-opacity duration-300"/>
-                                        <div
-                                            className="absolute bottom-0 left-0 w-full bg-gradient-to-t from-black to-transparent p-3 rounded-lg">
-                                            <h2 className="text-lg font-bold text-white">{menu.name}</h2>
-                                            <p className="text-xs text-gray-300 mt-1">{menu.description}</p>
-                                        </div>
-                                    </div>
-                                    <div className="w-full bg-white/100 backdrop-blur-md p-1 rounded-lg mt-2">
-                                        <div className="flex items-center justify-center space-x-4">
-                                            <p className="text-md font-semibold text-green-600">{menu.price}</p>
-                                            <Button variant="ghost" className="w-full max-w-[200px] text-md">
-                                                Ajouter au panier
-                                            </Button>
-                                        </div>
-                                    </div>
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 px-8">
+                    {filteredMenus.map((menu) => (
+                        <div key={menu.id} className="relative rounded-lg overflow-hidden shadow-lg">
+                            <div className="h-[200px] w-full relative">
+                                <Image src={menu.image} alt={menu.name} fill className="object-cover" />
+                                <div className="absolute inset-0 bg-black opacity-40"></div>
+                                <div className="absolute top-2 right-2 bg-white/80 rounded-full p-1 cursor-pointer shadow-md hover:bg-white transition">
+                                    <Plus size={20} className="text-gray-700" />
                                 </div>
-                            ))}
-                            {filteredMenus.length === 0 && (
-                                <p className="text-center text-gray-500 col-span-full">
-                                    Aucun menu trouvé.
-                                </p>
-                            )}
+                                <div className="absolute bottom-0 left-0 w-full p-3 text-white flex justify-between items-end">
+                                    <div>
+                                        <h2 className="text-lg font-bold">{menu.name}</h2>
+                                        <p className="text-sm">{menu.description}</p>
+                                    </div>
+                                    <p className="text-md font-semibold">{menu.price}</p>
+                                </div>
+                            </div>
                         </div>
-                    </main>
+                    ))}
+                    {filteredMenus.length === 0 && (
+                        <p className="text-center text-gray-500 col-span-full">Aucun menu trouvé.</p>
+                    )}
                 </div>
             </div>
         </div>
