@@ -80,46 +80,43 @@ export default function Home() {
                     </p>
                 </div>
 
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-7xl mx-auto">
+                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 max-w-7xl mx-auto">
                     {/* Card 1 - Fresh Ingredients */}
                     <div className="bg-white shadow-lg rounded-lg p-6 text-center border">
                         <div className="flex justify-center items-center mb-4">
-                            <i className="text-colors-titleGreen">
+                            <i className="text-colors-titleGreen text-3xl sm:text-4xl md:text-2xl lg:text-2xl">
                                 <Truck />
                             </i>
                         </div>
-                        <h3 className="text-1xl md:text-2xl lg:text-3lg font-medium text-colors-titleGreen mb-2">Ingrédients frais</h3>
-                        <p className="text-sm md:text-xl lg:text-lg text-neutral-600">
-                            Nous utilisons uniquement des ingrédients frais et de saison, provenant directement des
-                            producteurs locaux, pour garantir la meilleure qualité dans chaque plat.
+                        <h3 className="text-xl sm:text-2xl md:text-xl lg:text-2xl font-medium text-colors-titleGreen mb-2">Ingrédients frais</h3>
+                        <p className="text-sm sm:text-base md:text-sm lg:text-sm text-neutral-600">
+                            Nous utilisons uniquement des ingrédients frais et de saison, provenant directement des producteurs locaux, pour garantir la meilleure qualité dans chaque plat.
                         </p>
                     </div>
 
                     {/* Card 2 - Authentic Cuisine */}
                     <div className="bg-white shadow-lg rounded-lg p-6 text-center border">
                         <div className="flex justify-center items-center mb-4">
-                            <i className="text-colors-titleGreen">
+                            <i className="text-colors-titleGreen text-3xl sm:text-4xl md:text-2xl lg:text-2xl">
                                 <CookingPot />
                             </i>
                         </div>
-                        <h3 className="text-1xl md:text-2xl lg:text-3lg font-medium text-colors-titleGreen mb-2">Cuisine authentique</h3>
-                        <p className="text-sm md:text-xl lg:text-lg text-neutral-600">
-                            Chaque plat est préparé avec des recettes traditionnelles et un savoir-faire ancestral, afin
-                            de vous offrir une expérience culinaire véritablement authentique.
+                        <h3 className="text-xl sm:text-2xl md:text-xl lg:text-2xl font-medium text-colors-titleGreen mb-2">Cuisine authentique</h3>
+                        <p className="text-sm sm:text-base md:text-sm lg:text-sm text-neutral-600">
+                            Chaque plat est préparé avec des recettes traditionnelles et un savoir-faire ancestral, afin de vous offrir une expérience culinaire véritablement authentique.
                         </p>
                     </div>
 
                     {/* Card 3 - Fast Service */}
                     <div className="bg-white shadow-lg rounded-lg p-6 text-center border">
                         <div className="flex justify-center items-center mb-4">
-                            <i className="text-colors-titleGreen">
+                            <i className="text-colors-titleGreen text-3xl sm:text-4xl md:text-2xl lg:text-2xl">
                                 <Salad />
                             </i>
                         </div>
-                        <h3 className="text-1xl md:text-2xl lg:text-3lg font-medium text-colors-titleGreen mb-2">Service rapide</h3>
-                        <p className="text-sm md:text-xl lg:text-lg text-neutral-600">
-                            Nous savons que votre temps est précieux. C&#39;est pourquoi nous nous engageons à vous
-                            servir rapidement sans compromettre la qualité de nos plats.
+                        <h3 className="text-xl sm:text-2xl md:text-xl lg:text-2xl font-medium text-colors-titleGreen mb-2">Service rapide</h3>
+                        <p className="text-sm sm:text-base md:text-sm lg:text-sm text-neutral-600">
+                            Nous savons que votre temps est précieux. C&#39;est pourquoi nous nous engageons à vous servir rapidement sans compromettre la qualité de nos plats.
                         </p>
                     </div>
                 </div>

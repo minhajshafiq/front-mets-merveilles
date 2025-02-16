@@ -16,11 +16,29 @@ interface HeaderProps {
 export default function Header({ userId }: Readonly<HeaderProps>) {
     const [isOpen, setIsOpen] = useState(false);
     const [isAdmin, setIsAdmin] = useState(false);
+    const [isSticky, setIsSticky] = useState(false);
 
     useEffect(() => {
         if (userId) {
             checkRole().then(setIsAdmin);
         }
+
+        // Fonction pour gérer le scroll
+        const handleScroll = () => {
+            if (window.scrollY > 0) {
+                setIsSticky(true); // Ajouter la classe "sticky" si l'utilisateur a scrollé
+            } else {
+                setIsSticky(false); // Retirer la classe "sticky" si l'utilisateur est tout en haut
+            }
+        };
+
+        // Attacher l'écouteur d'événement de scroll
+        window.addEventListener("scroll", handleScroll);
+
+        // Nettoyer l'écouteur d'événements au démontage du composant
+        return () => {
+            window.removeEventListener("scroll", handleScroll);
+        };
     }, [userId]);
 
     useEffect(() => {
@@ -47,18 +65,18 @@ export default function Header({ userId }: Readonly<HeaderProps>) {
     ];
 
     return (
-        <header className="w-full z-50 transition">
-            <Container className="relative px-4 sm:px-6 lg:px-12 flex h-16 items-center justify-between">
-                <div className="max-w-[150px] mt-6">
+        <header className={`w-full h-200 z-50 transition-all ${isSticky ? 'fixed top-0 left-0 bg-white shadow-lg' : ''}`}>
+            <Container className="relative px-4 sm:px-6 lg:px-12 flex h-16 align items-center justify-between">
+                <div className="max-w-[100px] md:max-w-[120px]">
                     <Link href="/">
-                        <Image src={`/images/logo_mets-merveilles.png`} alt="Mets & Merveilles" width={200} height={200} className="w-full h-auto object-contain" />
+                        <Image src={`/images/logo_mets-merveilles.png`} alt="Mets & Merveilles" width={200} height={200} className="w-full h-full object-contain" />
                     </Link>
                 </div>
 
                 {/* Menu Desktop */}
-                <nav className="hidden sm:flex items-center space-x-4">
+                <nav className="hidden sm:flex items-center space-x-3">
                     {navLinks.map(({ href, label }) => (
-                        <Button asChild variant="link" key={href} className="font-bold text-colors-titleGreen">
+                        <Button asChild variant="link" key={href} className="font-bold text-colors-titleGreen md:px-2">
                             <Link href={href}>{label}</Link>
                         </Button>
                     ))}

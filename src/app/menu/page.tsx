@@ -1,6 +1,6 @@
 'use client';
 import { Search, Plus } from 'lucide-react';
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import Image from "next/image";
@@ -8,7 +8,6 @@ import Image from "next/image";
 export default function MenuPage() {
     const [search, setSearch] = useState("");
     const [selectedCategory, setSelectedCategory] = useState("");
-    const [showNavbar, setShowNavbar] = useState(false);
 
     const categories = ["Entrées", "Plats", "Desserts", "Boissons"];
     const menus = [
@@ -24,26 +23,8 @@ export default function MenuPage() {
             (selectedCategory ? menu.category === selectedCategory : true)
     );
 
-    const handleScroll = () => {
-        setShowNavbar(window.scrollY > 50);
-    };
-
-    useEffect(() => {
-        window.addEventListener("scroll", handleScroll);
-        return () => window.removeEventListener("scroll", handleScroll);
-    }, []);
-
     return (
         <div className="min-h-screen px-8">
-            {showNavbar && (
-                <div className="fixed top-0 left-0 w-full backdrop-blur-md bg-opacity-70 shadow-md p-4 z-50">
-                    <div className="max-w-5xl mx-auto flex justify-between items-center">
-                        <h1 className="text-xl font-semibold">Menus</h1>
-                        <Button>Contact</Button>
-                    </div>
-                </div>
-            )}
-
             <div className="max-w-5xl mx-auto py-10 space-y-6">
                 <div className="flex flex-col items-center space-y-4">
                     <div className="relative w-full max-w-lg">
@@ -56,17 +37,17 @@ export default function MenuPage() {
                             className="w-full pl-10 pr-4 py-2 rounded-full border border-gray-300 focus:ring-2 focus:ring-green-500 focus:outline-none"
                         />
                     </div>
-                    <div className="flex overflow-x-auto">
+                    <div className="flex overflow-x-auto space-x-2">
                         <Button
                             variant={selectedCategory === "" ? "ghost" : "link"}
                             onClick={() => setSelectedCategory("")}
-                            className={`text-sm px-3 ${selectedCategory === "" ? "font-bold" : "border-0"}`}
+                            className={`text-sm px-2 ${selectedCategory === "" ? "font-bold" : "border-0"}`}
                         >
                             Toutes
                         </Button>
                         {categories.map((category) => (
                             <Button
-                                className={`text-sm px-3 ${selectedCategory === category ? "font-bold" : "border-0"}`}
+                                className={`text-sm px-2 ${selectedCategory === category ? "font-bold" : "border-0"}`}
                                 key={category}
                                 variant={selectedCategory === category ? "ghost" : "link"}
                                 onClick={() => setSelectedCategory(category)}
@@ -75,7 +56,6 @@ export default function MenuPage() {
                             </Button>
                         ))}
                     </div>
-
                 </div>
 
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 px-3">
