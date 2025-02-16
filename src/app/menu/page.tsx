@@ -60,13 +60,13 @@ export default function MenuPage() {
                         <Button
                             variant={selectedCategory === "" ? "ghost" : "link"}
                             onClick={() => setSelectedCategory("")}
-                            className={`text-sm ${selectedCategory === "" ? "font-bold" : "border-0"}`}
+                            className={`text-sm px-3 ${selectedCategory === "" ? "font-bold" : "border-0"}`}
                         >
                             Toutes
                         </Button>
                         {categories.map((category) => (
                             <Button
-                                className={`text-sm ${selectedCategory === category ? "font-bold" : "border-0"}`}
+                                className={`text-sm px-3 ${selectedCategory === category ? "font-bold" : "border-0"}`}
                                 key={category}
                                 variant={selectedCategory === category ? "ghost" : "link"}
                                 onClick={() => setSelectedCategory(category)}
@@ -78,7 +78,7 @@ export default function MenuPage() {
 
                 </div>
 
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 px-8">
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 px-3">
                     {filteredMenus.map((menu) => (
                         <div key={menu.id} className="relative rounded-lg overflow-hidden shadow-lg">
                             <div className="h-[200px] w-full relative">
