@@ -23,6 +23,21 @@ export default function Header({ userId }: Readonly<HeaderProps>) {
         }
     }, [userId]);
 
+    useEffect(() => {
+        if (isOpen) {
+            // Désactiver le scroll sur le body
+            document.body.style.overflow = 'hidden';
+        } else {
+            // Réactiver le scroll sur le body
+            document.body.style.overflow = 'auto';
+        }
+
+        // Nettoyage au démontage du composant
+        return () => {
+            document.body.style.overflow = 'auto';
+        };
+    }, [isOpen]);
+
     // Liste des liens du menu
     const navLinks = [
         { href: "/", label: "Accueil" },
