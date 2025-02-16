@@ -1,7 +1,5 @@
-import { Roles } from '@/lib/globals.d.ts'
-import { auth } from '@clerk/nextjs/server'
-
-export const checkRole = async (role: Roles) => {
-    const { sessionClaims } = await auth()
-    return sessionClaims?.metadata.role === role
+export async function checkRole() {
+    const res = await fetch("/api/check-role");
+    const data = await res.json();
+    return data.isAdmin;
 }

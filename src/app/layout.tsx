@@ -5,17 +5,16 @@ import Footer from "@/components/footer";
 import "./globals.css";
 import {auth} from "@clerk/nextjs/server";
 import {Instrument_Sans, Poppins} from "@next/font/google";
-import Image from "next/image";
 
 const instrumentSans = Instrument_Sans({
     subsets: ["latin"],
-    weight:  ["400", "500", "600", "700"],
+    weight: ["400", "500", "600", "700"],
     style: "normal",
 });
 
 const poppins = Poppins({
     subsets: ["latin"],
-    weight:  ["400", "500", "600", "700"],
+    weight: ["400", "500", "600", "700"],
     style: "normal",
 });
 
@@ -40,23 +39,16 @@ export default async function RootLayout({
             <body
                 className={`${instrumentSans.className} ${poppins.className} antialiased`}
             >
-            {/* Hero Image */}
-            <Image
-                src="/images/hero.svg"
-                className="hidden lg:block absolute -z-10 top-0 right-0 w-full md:w-[60%]"
-                alt="Hero Banner"
-                width={800}
-                height={800}
-            />
 
-            {/* Header */}
-            <Header userId={userId}/>
+                {/* Header */}
+                <Header userId={userId}/>
 
-            {/* Main Content */}
-            {children}
 
-            {/* Footer */}
-            <Footer/>
+                {/* Main Content */}
+                {children}
+                {/* Footer */}
+                <Footer/>
+
             </body>
             </html>
         </ClerkProvider>
