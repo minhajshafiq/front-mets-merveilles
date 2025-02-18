@@ -42,7 +42,7 @@ export default function AddMenuItem() {
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
 
-        const baseUrl = 'http://localhost:8080'; // URL de ton backend
+        const baseUrl = 'https://back-mets-merveilles-production.up.railway.app'; // URL de ton backend
         const url = `${baseUrl}/${formData.type}`; // URL en fonction du type sélectionné
 
         console.log(url);
@@ -61,7 +61,7 @@ export default function AddMenuItem() {
         const jsonBlob = new Blob([JSON.stringify(dessertData)], { type: 'application/json' });
 
         // Ajouter le fichier JSON sous forme de 'dessert.json'
-        formDataToSend.append('dessert', jsonBlob, 'dessert.json');
+        formDataToSend.append('data', jsonBlob, 'dessert.json');
 
         // Ajouter l'image, si présente
         if (formData.file) {
@@ -71,7 +71,7 @@ export default function AddMenuItem() {
         try {
             const response = await fetch(url, {
                 method: 'POST',
-                body: formDataToSend,
+                body: formDataToSend,  // Envoi des données et du fichier en multipart/form-data
             });
 
             if (response.ok) {
@@ -180,7 +180,7 @@ export default function AddMenuItem() {
 
                         {/* Image */}
                         <div>
-                            <Label htmlFor="image">Image</Label>
+                            <Label htmlFor="file">Image</Label>
                             <Input
                                 type="file"
                                 name="file"  // Change ici pour correspondre à "file"
