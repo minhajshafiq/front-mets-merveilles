@@ -68,7 +68,7 @@ export default function Home() {
             </section>
 
             {/* Why Us Section */}
-            <section className="py-13">
+            <section className="py-13 mb-6">
                 <div className="text-center mb-6">
                     <h2 className="text-xl font-bold md:text-2xl lg:text-3xl tracking-wider text-colors-titleGreen font-instrumentSans mb-4">
                         Pourquoi choisir notre restaurant ?

@@ -42,7 +42,7 @@ export default function AddMenuItem() {
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
 
-        const baseUrl = 'https://back-mets-merveilles-production.up.railway.app'; // URL de ton backend
+        const baseUrl = 'https://back-mets-merveilles-production.up.railway.app'; // URL backend
         const url = `${baseUrl}/${formData.type}`; // URL en fonction du type sélectionné
 
         console.log(url);
