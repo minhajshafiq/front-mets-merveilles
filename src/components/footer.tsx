@@ -5,7 +5,7 @@ import Link from "next/link";
 
 export default function Footer() {
     return (
-        <footer className="px-7 py-4 text-center text-sm">
+        <footer className="px-7 py-4 text-center text-sm mt-auto bg-white">
             <Container>
                 <div className="flex flex-row justify-center items-center gap-8 px-4 md:px-12">
                     {/* Section Menu */}
@@ -59,3 +59,4 @@ export default function Footer() {
         </footer>
     );
 }
+

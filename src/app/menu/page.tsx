@@ -4,24 +4,54 @@ import { useState } from "react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import Image from "next/image";
+import { useCart } from "@/components/context/CartContext";
+import { toast } from "sonner";
+
+// Définition du type pour un menu avec quantity
+interface Menu {
+    id: number;
+    name: string;
+    category: string;
+    image: string;
+    description: string;
+    price: string;
+    quantity: number;  // Ajout de quantity
+}
 
 export default function MenuPage() {
     const [search, setSearch] = useState("");
     const [selectedCategory, setSelectedCategory] = useState("");
+    const { addToCart, cartItems } = useCart();
 
     const categories = ["Entrées", "Plats", "Desserts", "Boissons"];
-    const menus = [
-        { id: 1, name: "Pizza Margherita", category: "Plats", image: "/images/pizza.jpg", description: "Tomate, mozzarella, basilic frais", price: "19$" },
-        { id: 2, name: "Pâtes Carbonara", category: "Plats", image: "/images/pates.jpg", description: "Crème, lardons, parmesan", price: "18.50€" },
-        { id: 3, name: "Tiramisu", category: "Desserts", image: "/images/tiramisu.jpg", description: "Dessert italien au mascarpon", price: "7.99€" },
-        { id: 4, name: "Salade César", category: "Boissons", image: "/images/salade.jpg", description: "Poulet, croûtons, sauce César", price: "4.50€" },
+    const menus: Menu[] = [
+        { id: 1, name: "Pizza Margherita", category: "Plats", image: "/images/pizza.jpg", description: "Tomate, mozzarella, basilic frais", price: "19€", quantity: 1 },
+        { id: 2, name: "Pâtes Carbonara", category: "Plats", image: "/images/pates.jpg", description: "Crème, lardons, parmesan", price: "18.50€", quantity: 1 },
+        { id: 3, name: "Tiramisu", category: "Desserts", image: "/images/tiramisu.jpg", description: "Dessert italien au mascarpone", price: "7.99€", quantity: 1 },
+        { id: 4, name: "Salade César", category: "Entrées", image: "/images/salade.jpg", description: "Poulet, croûtons, sauce César", price: "4.50€", quantity: 1 },
+        { id: 5, name: "Coca-Cola", category: "Boissons", image: "/images/coca.jpg", description: "Boisson gazeuse", price: "2.50€", quantity: 1 },
     ];
 
+    // Filtrage des menus en fonction de la recherche et de la catégorie sélectionnée
     const filteredMenus = menus.filter(
         (menu) =>
             menu.name.toLowerCase().includes(search.toLowerCase()) &&
             (selectedCategory ? menu.category === selectedCategory : true)
     );
+
+    // Fonction pour ajouter un élément au panier
+    const handleAddToCart = (menu: Menu) => {
+        // Vérifie si l'élément est déjà dans le panier
+        const existingMenu = cartItems.find(item => item.id === menu.id);
+        if (existingMenu) {
+            // Si l'élément est déjà dans le panier, on augmente la quantité
+            existingMenu.quantity += 1;
+        } else {
+            // Sinon, on ajoute le menu avec quantité 1
+            addToCart({...menu, quantity: 1});
+        }
+        toast.success(`${menu.name} a été ajouté au panier !`);
+    };
 
     return (
         <div className="min-h-screen px-8">
@@ -60,12 +90,20 @@ export default function MenuPage() {
 
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 px-3">
                     {filteredMenus.map((menu) => (
-                        <div key={menu.id} className="relative rounded-lg overflow-hidden shadow-lg">
+                        <div key={menu.id} className="relative rounded-lg cursor-pointer overflow-hidden shadow-lg group">
                             <div className="h-[200px] w-full relative">
-                                <Image src={menu.image} alt={menu.name} fill className="object-cover" />
+                                <Image
+                                    src={menu.image}
+                                    alt={menu.name}
+                                    fill
+                                    className="object-cover transition-transform transform group-hover:scale-110"
+                                />
                                 <div className="absolute inset-0 bg-black opacity-40"></div>
-                                <div className="absolute top-2 right-2 bg-white/80 rounded-full p-1 cursor-pointer shadow-md hover:bg-white transition">
-                                    <Plus size={20} className="text-gray-700" />
+                                <div
+                                    className="absolute top-1 right-1 rounded-full p-1 cursor-pointer shadow-md transition hover:bg-gray-700"
+                                    onClick={() => handleAddToCart(menu)}
+                                >
+                                    <Plus size={30} color="white"/>
                                 </div>
                                 <div className="absolute bottom-0 left-0 w-full p-3 text-white flex justify-between items-end">
                                     <div>

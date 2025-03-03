@@ -5,6 +5,8 @@ import Footer from "@/components/footer";
 import "./globals.css";
 import { auth } from "@clerk/nextjs/server";
 import { Instrument_Sans, Poppins } from "@next/font/google";
+import { Toaster } from "@/components/ui/sonner"
+import { CartProvider } from "@/components/context/CartContext";
 
 
 const instrumentSans = Instrument_Sans({
@@ -32,24 +34,26 @@ type RootLayoutProps = {
 export default async function RootLayout({
                                              children,
                                          }: Readonly<RootLayoutProps>): Promise<JSX.Element> {
-    const { userId } = await auth(); // Await ici car `auth()` est une promesse.
+    const { userId } = await auth();
 
     return (
         <ClerkProvider>
-
+            <CartProvider>
                 <html lang="en">
                 <body className={`${instrumentSans.className} ${poppins.className} antialiased`}>
-                {/* Header */}
+                {/* Header a maintenant accès au contexte du panier */}
                 <Header userId={userId} />
 
                 {/* Main Content */}
                 {children}
+                <Toaster />
 
                 {/* Footer */}
                 <Footer />
                 </body>
                 </html>
-
+            </CartProvider>
         </ClerkProvider>
     );
 }
+

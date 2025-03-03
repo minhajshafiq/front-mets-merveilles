@@ -3,7 +3,8 @@ import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import { Facebook, Instagram, Twitter, Mail, Phone } from "lucide-react";
+import { Mail, Phone } from "lucide-react";
+import Image from "next/image";
 
 export default function ContactForm() {
     const [name, setName] = useState("");
@@ -18,7 +19,7 @@ export default function ContactForm() {
     };
 
     return (
-        <div className="py-4 px-8">
+        <div className="min-h-screen py-4 px-8">
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 max-w-7xl mx-auto">
                 <div className="space-y-3 lg:pl-8">
                     <h1 className="text-2xl font-semibold text-colors-titleGreen">Contactez-nous !</h1>
@@ -37,18 +38,15 @@ export default function ContactForm() {
                         </div>
                     </div>
                     <div className="w-full border-t border-gray-400 my-3"></div>
-                    <div className="hidden lg:block text-left text-base text-gray-800 font-bold mb-3 pl-4">
-                        Suivez-nous
-                    </div>
                     <div className="flex justify-center space-x-3 text-gray-900 pl-4">
                         <a href="https://facebook.com" target="_blank" rel="noopener noreferrer">
-                            <Facebook size={22} className="text-gray-900 hover:text-gray-700 transition duration-200" />
+                            <Image src="/images/facebook.svg" width={20} height={20} alt="Facebook Logo" className="w-5 h-5" />
                         </a>
-                        <a href="https://twitter.com" target="_blank" rel="noopener noreferrer">
-                            <Twitter size={22} className="text-gray-900 hover:text-gray-700 transition duration-200" />
+                        <a href="https://x.com" target="_blank" rel="noopener noreferrer">
+                            <Image src="/images/x.svg" width={20} height={20} alt="X Logo" className="w-5 h-5" />
                         </a>
                         <a href="https://instagram.com" target="_blank" rel="noopener noreferrer">
-                            <Instagram size={22} className="text-gray-900 hover:text-gray-700 transition duration-200" />
+                            <Image src="/images/instagram.svg" width={20} height={20} alt="Instagram Logo" className="w-5 h-5" />
                         </a>
                     </div>
                 </div>
@@ -71,7 +69,7 @@ export default function ContactForm() {
                                     onChange={(e) => setName(e.target.value)}
                                 />
                             </div>
-                            <div className="flex flex-col sm:mt-45 sm:w-1/2 w-full pt-3">
+                            <div className="flex flex-col sm:w-1/2 w-full">
                                 <label htmlFor="email" className="text-xs font-medium text-gray-700 mb-1">
                                     Email
                                 </label>
