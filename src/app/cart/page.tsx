@@ -9,6 +9,7 @@ import Image from "next/image";
 export default function CartPage() {
     const { cartItems, removeFromCart, updateCartItemQuantity } = useCart();
 
+
     // Calculer le total du panier
     const totalPrice = cartItems.reduce((total, item) => total + parseFloat(item.price) * item.quantity, 0);
 
@@ -35,31 +36,37 @@ export default function CartPage() {
                     {cartItems.map((item) => (
                         <div key={item.id} className="flex justify-between items-center border-b py-4">
                             <div className="flex items-center">
-                                <Image src={item.image} alt={item.name} className="w-16 h-16 object-cover mr-4" />
+                                <Image
+                                    src={item.image}
+                                    alt={item.name}
+                                    width={64}
+                                    height={64}
+                                    className="w-16 h-16 object-cover mr-4"
+                                />
                                 <div>
                                     <span className="font-medium">{item.name}</span>
                                     <p className="text-sm text-gray-500">{item.category}</p>
-                                    <p className="text-sm text-gray-500">€{item.price} x {item.quantity}</p>
+                                    <p className="text-sm text-gray-500">{item.price} x {item.quantity}</p>
                                 </div>
                             </div>
 
                             <div className="flex items-center space-x-4">
                                 <Button
                                     variant="link"
-                                    onClick={() => handleQuantityChange(item.id, "increase")}
-                                    className="text-sm transition-transform transform hover:scale-110 hover:text-green-500 border border-gray-300 rounded-md px-2 py-1 shadow-sm hover:shadow-md"
+                                    onClick={() => handleQuantityChange(item.id, "decrease")}
+                                    className="text-sm transition-transform transform hover:scale-110 hover:text-red-500 border border-gray-300 rounded-md px-2 py-1 shadow-sm hover:shadow-md"
                                 >
-                                    +
+                                    -
                                 </Button>
 
                                 <span className="text-sm font-semibold">{item.quantity}</span>
 
                                 <Button
                                     variant="link"
-                                    onClick={() => handleQuantityChange(item.id, "decrease")}
-                                    className="text-sm transition-transform transform hover:scale-110 hover:text-red-500 border border-gray-300 rounded-md px-2 py-1 shadow-sm hover:shadow-md"
+                                    onClick={() => handleQuantityChange(item.id, "increase")}
+                                    className="text-sm transition-transform transform hover:scale-110 hover:text-green-500 border border-gray-300 rounded-md px-2 py-1 shadow-sm hover:shadow-md"
                                 >
-                                    -
+                                    +
                                 </Button>
 
                                 <Button

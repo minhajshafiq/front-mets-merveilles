@@ -10,12 +10,14 @@ import Image from "next/image";
 import {Menu, X, ShoppingCart, Trash2} from "lucide-react";
 import {useCart} from "@/components/context/CartContext";
 import {Popover, PopoverContent, PopoverTrigger} from "@/components/ui/popover";
+import {usePathname} from "next/navigation";
 
 interface HeaderProps {
     userId: string | null;
 }
 
 export default function Header({userId}: Readonly<HeaderProps>) {
+    const pathname = usePathname();
     const [isOpen, setIsOpen] = useState(false);
     const [isAdmin, setIsAdmin] = useState(false);
     const [isSticky, setIsSticky] = useState(false);
@@ -73,11 +75,17 @@ export default function Header({userId}: Readonly<HeaderProps>) {
         updateCartItemQuantity(itemId, type === "increase" ? 1 : -1);
     };
 
-
     // Fonction pour supprimer un item du panier
     const handleRemoveItem = (itemId: number) => {
         removeFromCart(itemId);
     };
+
+    // Vérifier si l'URL actuelle est l'une des pages où le panier doit être caché
+    const isCartPage = pathname === "/cart";
+    const isSignUpPage = pathname === "/sign-up";
+    const isSignInPage = pathname === "/sign-in";
+
+    const shouldShowCartIcon = !isCartPage && !isSignUpPage && !isSignInPage;
 
     return (
         <header
@@ -118,71 +126,74 @@ export default function Header({userId}: Readonly<HeaderProps>) {
                     )}
 
                     {/* Icône Panier avec Popover */}
-                    <Popover>
-                        <PopoverTrigger className="relative">
-                            <ShoppingCart size={28} className="text-colors-titleGreen"/>
-                            {cartCount > 0 && (
-                                <span
-                                    className="absolute -top-2 -right-2 bg-red-500 text-white text-xs font-bold w-5 h-5 flex items-center justify-center rounded-full">
-                                    {cartCount}
-                                </span>
-                            )}
-                        </PopoverTrigger>
+                    {!isSignUpPage && !isSignInPage && !isCartPage && (
+                        <Popover>
+                            <PopoverTrigger className="relative">
+                                <ShoppingCart size={28} className="text-colors-titleGreen"/>
+                                {cartCount > 0 && (
+                                    <span
+                                        className="absolute -top-2 -right-2 bg-red-500 text-white text-xs font-bold w-5 h-5 flex items-center justify-center rounded-full">
+                                        {cartCount}
+                                    </span>
+                                )}
+                            </PopoverTrigger>
 
-                        <PopoverContent className="w-80 p-4 shadow-lg bg-white">
-                            <h3 className="font-semibold text-lg mb-2">Panier</h3>
-                            {cartItems.length > 0 ? (
-                                <div>
-                                    {cartItems.map(item => (
-                                        <div key={item.id}
-                                             className="flex justify-between gap-1 items-center mb-3 border-b pb-2">
-                                            <div className="flex flex-col">
-                                                <span className="font-medium">{item.name}</span>
-                                                <span className="text-sm text-gray-500">
-                            €{item.price}
-                        </span>
+                            <PopoverContent className="w-80 p-4 shadow-lg bg-white">
+                                <h3 className="font-semibold text-lg mb-2">Panier</h3>
+                                {cartItems.length > 0 ? (
+                                    <div>
+                                        {cartItems.map(item => (
+                                            <div key={item.id}
+                                                 className="flex justify-between gap-1 items-center mb-3 border-b pb-2">
+                                                <div className="flex flex-col">
+                                                    <span className="font-medium">{item.name}</span>
+                                                    <span className="text-sm text-gray-500">
+                                                        €{item.price}
+                                                    </span>
+                                                </div>
+                                                <div className="flex items-center space-x-3">
+                                                    <Button
+                                                        variant="ghost"
+                                                        onClick={() => handleQuantityChange(item.id, "decrease")}
+                                                        className="text-sm px-2 py-1 border rounded-md"
+                                                    >
+                                                        -
+                                                    </Button>
+
+                                                    <span
+                                                        className="text-sm font-semibold w-6 text-center">{item.quantity}</span>
+
+                                                    <Button
+                                                        variant="ghost"
+                                                        onClick={() => handleQuantityChange(item.id, "increase")}
+                                                        className="text-sm px-2 py-1 border rounded-md"
+                                                    >
+                                                        +
+                                                    </Button>
+
+                                                    <Button
+                                                        variant="ghost"
+                                                        onClick={() => handleRemoveItem(item.id)}
+                                                        className="text-sm text-red-500 px-2 py-1 border border-red-500 rounded-md hover:bg-red-500 hover:text-white group"
+                                                    >
+                                                        <Trash2 size={16}
+                                                                className="text-red-500 group-hover:text-white"/>
+                                                    </Button>
+                                                </div>
                                             </div>
-                                            <div className="flex items-center space-x-3">
-                                                <Button
-                                                    variant="ghost"
-                                                    onClick={() => handleQuantityChange(item.id, "decrease")}
-                                                    className="text-sm px-2 py-1 border rounded-md"
-                                                >
-                                                    -
-                                                </Button>
-
-                                                <span
-                                                    className="text-sm font-semibold w-6 text-center">{item.quantity}</span>
-
-                                                <Button
-                                                    variant="ghost"
-                                                    onClick={() => handleQuantityChange(item.id, "increase")}
-                                                    className="text-sm px-2 py-1 border rounded-md"
-                                                >
-                                                    +
-                                                </Button>
-
-                                                <Button
-                                                    variant="ghost"
-                                                    onClick={() => handleRemoveItem(item.id)}
-                                                    className="text-sm text-red-500 px-2 py-1 border border-red-500 rounded-md hover:bg-red-500 hover:text-white group"
-                                                >
-                                                    <Trash2 size={16} className="text-red-500 group-hover:text-white"/>
-                                                </Button>
-                                            </div>
+                                        ))}
+                                        <div className="mt-4 text-center">
+                                            <Link href="/cart" className="text-blue-600 font-semibold">
+                                                Voir mon panier
+                                            </Link>
                                         </div>
-                                    ))}
-                                    <div className="mt-4 text-center">
-                                        <Link href="/cart" className="text-blue-600 font-semibold">
-                                            Voir mon panier
-                                        </Link>
                                     </div>
-                                </div>
-                            ) : (
-                                <p className="text-center text-gray-500">Votre panier est vide.</p>
-                            )}
-                        </PopoverContent>
-                    </Popover>
+                                ) : (
+                                    <p className="text-center text-gray-500">Votre panier est vide.</p>
+                                )}
+                            </PopoverContent>
+                        </Popover>
+                    )}
                 </nav>
 
                 {/* Bouton Menu Hamburger (Mobile) */}
@@ -235,10 +246,10 @@ export default function Header({userId}: Readonly<HeaderProps>) {
                 </div>
 
                 {/* Icône Panier Fixe sur Mobile */}
-                {cartCount > 0 && (
+                {shouldShowCartIcon && cartCount > 0 &&  (
                     <Link
                         href="/cart"
-                        className="fixed bottom-4 right-4 bg-green-500 text-white p-3 rounded-full shadow-lg flex items-center justify-center sm:hidden"
+                        className="fixed bottom-4 right-4 bg-green-500 text-white p-3 rounded-full shadow-lg flex items-center justify-center sm:hidden z-50"
                     >
                         <ShoppingCart size={28} />
                         <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs font-bold w-5 h-5 flex items-center justify-center rounded-full">
