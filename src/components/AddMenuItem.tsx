@@ -77,7 +77,7 @@ export default function AddMenuItem() {
             if (response.ok) {
                 alert('Item ajouté avec succès !');
                 setFormData({
-                    type: 'starter',
+                    type: 'menus',
                     name: '',
                     price: '',
                     description: '',

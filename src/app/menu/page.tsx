@@ -1,13 +1,14 @@
-'use client';
-import { Search, Plus } from 'lucide-react';
-import { useState, useEffect } from "react";
+"use client"
+
+import { useState, useEffect, useMemo } from "react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import Image from "next/image";
+import { Search, Plus } from "lucide-react";
+import { Skeleton } from "@/components/ui/skeleton";
 import { useCart } from "@/components/context/CartContext";
 import { toast } from "sonner";
+import Image from "next/image";
 
-// Définition du type pour un menu avec quantity
 interface Menu {
     id: number;
     name: string;
@@ -18,77 +19,118 @@ interface Menu {
     quantity: number;
 }
 
-interface StarterResponse {
+interface MenusResponse {
+    starters: MenuResponse[];
+    mainCourses: MenuResponse[];
+    desserts: MenuResponse[];
+    drinks: MenuResponse[];
+}
+
+interface MenuResponse {
     id: number;
     name: string;
+    category: string;
     imageUrl?: string;
     description: string;
     price: number;
 }
 
+const categories = ["Entrées", "Plats", "Desserts", "Boissons"];
+
+// Map French category names to their corresponding English keys in the data
+const categoryMapping: Record<string, string> = {
+    "entrées": "starters",
+    "plats": "mainCourses",
+    "desserts": "desserts",
+    "boissons": "drinks"
+};
+
+const fetchMenuData = async () => {
+    try {
+        const response = await fetch('/api/menus');
+        if (!response.ok) throw new Error('Failed to fetch menus');
+        const data: MenusResponse = await response.json();
+
+        const formatMenus = (menus: MenuResponse[], category: string) => {
+            return menus.map((item) => ({
+                id: item.id,
+                name: item.name,
+                category: category,
+                image: item.imageUrl || `/images/default-${category.toLowerCase()}.jpg`,
+                description: item.description,
+                price: `${item.price}€`,
+                quantity: 1,
+            }));
+        };
+
+        const starters = formatMenus(data.starters, 'Entrées');
+        const mainCourses = formatMenus(data.mainCourses, 'Plats');
+        const desserts = formatMenus(data.desserts, 'Desserts');
+        const drinks = formatMenus(data.drinks, 'Boissons');
+
+        return { starters, mainCourses, desserts, drinks };
+    } catch (err) {
+        console.error('Error loading menus:', err);
+        toast.error('Erreur lors du chargement des menus');
+        return { starters: [], mainCourses: [], desserts: [], drinks: [] };
+    }
+};
+
 export default function MenuPage() {
     const [search, setSearch] = useState("");
     const [selectedCategory, setSelectedCategory] = useState("");
     const { addToCart, cartItems } = useCart();
-    const [starters, setStarters] = useState<Menu[]>([]);
+    const [menus, setMenus] = useState({
+        starters: [] as Menu[],
+        mainCourses: [] as Menu[],
+        desserts: [] as Menu[],
+        drinks: [] as Menu[],
+    });
     const [loading, setLoading] = useState(false);
 
-    const categories = ["Entrées", "Plats", "Desserts", "Boissons"];
-    const defaultMenus: Menu[] = [
-        { id: 1, name: "Pizza Margherita", category: "Plats", image: "/images/pizza.jpg", description: "Tomate, mozzarella, basilic frais", price: "19€", quantity: 1 },
-        { id: 2, name: "Pâtes Carbonara", category: "Plats", image: "/images/pates.jpg", description: "Crème, lardons, parmesan", price: "18.50€", quantity: 1 },
-        { id: 3, name: "Tiramisu", category: "Desserts", image: "/images/tiramisu.jpg", description: "Dessert italien au mascarpone", price: "7.99€", quantity: 1 },
-        { id: 4, name: "Salade César", category: "Entrées", image: "/images/salade.jpg", description: "Poulet, croûtons, sauce César", price: "4.50€", quantity: 1 },
-        { id: 5, name: "Coca-Cola", category: "Boissons", image: "/images/coca.jpg", description: "Boisson gazeuse", price: "2.50€", quantity: 1 },
-    ];
-
     useEffect(() => {
-        const fetchStarters = async () => {
+        const fetchData = async () => {
             setLoading(true);
-            try {
-                const response = await fetch('/api/starter');
-                if (!response.ok) throw new Error('Failed to fetch starters');
-                const data = await response.json();
-                console.log(data);
-
-                const formattedStarters = data.map((starter: StarterResponse) => ({
-                    id: starter.id,
-                    name: starter.name,
-                    category: "Entrées",
-                    image: starter.imageUrl || "/images/default-starter.jpg",
-                    description: starter.description,
-                    price: `${starter.price}€`,
-                    quantity: 1
-                }));
-
-                setStarters(formattedStarters);
-            } catch (error) {
-                console.error('Error fetching starters:', error);
-                toast.error("Erreur lors du chargement des entrées");
-            } finally {
-                setLoading(false);
-            }
+            const menusData = await fetchMenuData();
+            setMenus(menusData);
+            setLoading(false);
         };
 
-        fetchStarters();
+        fetchData();
     }, []);
 
-    const allMenus = [...starters, ...defaultMenus.filter(menu => menu.category !== "Entrées")];
+    // Memoize filtered menus based on search term
+    const filteredMenus = useMemo(() => ({
+        starters: menus.starters.filter(menu => menu.name.toLowerCase().includes(search.toLowerCase())),
+        mainCourses: menus.mainCourses.filter(menu => menu.name.toLowerCase().includes(search.toLowerCase())),
+        desserts: menus.desserts.filter(menu => menu.name.toLowerCase().includes(search.toLowerCase())),
+        drinks: menus.drinks.filter(menu => menu.name.toLowerCase().includes(search.toLowerCase()))
+    }), [menus, search]);
 
-    // Filtrage des menus en fonction de la recherche et de la catégorie sélectionnée
-    const filteredMenus = allMenus.filter(
-        (menu) =>
-            menu.name.toLowerCase().includes(search.toLowerCase()) &&
-            (selectedCategory ? menu.category === selectedCategory : true)
-    );
+    // Memoize the displayed menus based on selected category
+    const displayMenus = useMemo(() => {
+        if (!selectedCategory) {
+            return [
+                ...filteredMenus.starters,
+                ...filteredMenus.mainCourses,
+                ...filteredMenus.desserts,
+                ...filteredMenus.drinks
+            ];
+        }
 
-    // Fonction pour ajouter un élément au panier
+        // Convert French category name to English data key
+        const categoryKey = categoryMapping[selectedCategory.toLowerCase()];
+
+        // Return the corresponding filtered menu array
+        return categoryKey ? filteredMenus[categoryKey as keyof typeof filteredMenus] : [];
+    }, [filteredMenus, selectedCategory]);
+
     const handleAddToCart = (menu: Menu) => {
         const existingMenu = cartItems.find(item => item.id === menu.id);
         if (existingMenu) {
             existingMenu.quantity += 1;
         } else {
-            addToCart({...menu, quantity: 1});
+            addToCart({ ...menu, quantity: 1 });
         }
         toast.success(`${menu.name} a été ajouté au panier !`);
     };
@@ -117,8 +159,8 @@ export default function MenuPage() {
                         </Button>
                         {categories.map((category) => (
                             <Button
-                                className={`text-sm px-2 ${selectedCategory === category ? "font-bold" : "border-0"}`}
                                 key={category}
+                                className={`text-sm px-2 ${selectedCategory === category ? "font-bold" : "border-0"}`}
                                 variant={selectedCategory === category ? "ghost" : "link"}
                                 onClick={() => setSelectedCategory(category)}
                             >
@@ -129,12 +171,14 @@ export default function MenuPage() {
                 </div>
 
                 {loading ? (
-                    <div className="flex justify-center items-center py-12">
-                        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-green-500"></div>
+                    <div className="flex justify-center items-center py-12 space-x-4">
+                        {[...Array(4)].map((_, i) => (
+                            <Skeleton key={i} className="w-[300px] h-[200px] rounded-md" />
+                        ))}
                     </div>
                 ) : (
                     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 px-3">
-                        {filteredMenus.map((menu) => (
+                        {displayMenus.map((menu) => (
                             <div key={menu.id} className="relative rounded-lg cursor-pointer overflow-hidden shadow-lg group">
                                 <div className="h-[200px] w-full relative">
                                     <Image
@@ -148,7 +192,7 @@ export default function MenuPage() {
                                         className="absolute top-1 right-1 rounded-full p-1 cursor-pointer shadow-md transition hover:bg-gray-700"
                                         onClick={() => handleAddToCart(menu)}
                                     >
-                                        <Plus size={30} color="white"/>
+                                        <Plus size={30} color="white" />
                                     </div>
                                     <div className="absolute bottom-0 left-0 w-full p-3 text-white flex justify-between items-end">
                                         <div>
@@ -160,7 +204,7 @@ export default function MenuPage() {
                                 </div>
                             </div>
                         ))}
-                        {filteredMenus.length === 0 && (
+                        {displayMenus.length === 0 && (
                             <p className="text-center text-gray-500 col-span-full">Aucun menu trouvé.</p>
                         )}
                     </div>
