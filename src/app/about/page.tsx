@@ -19,15 +19,14 @@ export default function About() {
                 {/* Image (à droite sur PC, centrée verticalement) */}
                 <div className="md:w-1/2 flex justify-center md:justify-end mt-4 md:mt-0">
                     <Image
-                        src="/images/heroFood.png"
-                        alt="Plat 1"
-                        width={500}
-                        height={500}
-                        className="rounded-lg w-full max-w-[400px] object-cover"
+                        src="https://firebasestorage.googleapis.com/v0/b/metsetmerveilles/o/HeroFood.png?alt=media&token=5295e80c-7f3a-449e-a01a-812ff3472920"
+                        alt="Food"
+                        width={500} // Largeur de l'image spécifiée
+                        height={400} // Hauteur de l'image spécifiée
+                        className="object-cover w-full h-auto"
                     />
                 </div>
             </div>
-
 
             <div className="mt-6 mb-6">
                 <p className="text-base text-gray-700">

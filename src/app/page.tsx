@@ -15,10 +15,10 @@ export default function Home() {
                 <div className="flex items-center justify-center md:w-1/2">
                     <div className="relative w-full h-[300px] md:max-w-[400px] md:h-[300px] lg:max-w-[500px] lg:h-[500px]">
                         <Image
-                            src="/images/HeroFood.png"
+                            src="https://firebasestorage.googleapis.com/v0/b/metsetmerveilles/o/HeroFood.png?alt=media&token=5295e80c-7f3a-449e-a01a-812ff3472920"
                             alt="Food"
                             className="object-contain w-full h-full"
-                            fill
+                            fill={true}
                         />
                     </div>
                 </div>

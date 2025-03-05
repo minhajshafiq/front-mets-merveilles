@@ -171,9 +171,9 @@ export default function MenuPage() {
                 </div>
 
                 {loading ? (
-                    <div className="flex justify-center items-center py-12 space-x-4">
-                        {[...Array(4)].map((_, i) => (
-                            <Skeleton key={i} className="w-[300px] h-[200px] rounded-md" />
+                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 py-12">
+                        {[...Array(8)].map((_, i) => (
+                            <Skeleton key={i} className="w-full h-[200px] rounded-md" />
                         ))}
                     </div>
                 ) : (
