@@ -41,19 +41,25 @@ export default async function RootLayout({
             <CartProvider>
                 <html lang="en">
                 <body className={`${instrumentSans.className} ${poppins.className} antialiased`}>
-                {/* Header a maintenant accès au contexte du panier */}
-                <Header userId={userId}/>
+                <div className="flex flex-col min-h-screen">
+                    {/* Header */}
+                    <Header userId={userId}/>
 
-                {/* Main Content */}
-                {children}
-                <Toaster/>
+                    {/* Main Content */}
+                    <main className="flex-grow">
+                        {children}
+                    </main>
 
-                {/* Footer */}
-                <Footer/>
+                    {/* Footer */}
+                    <Footer />
+                </div>
+
+                <Toaster />
                 </body>
                 </html>
             </CartProvider>
         </ClerkProvider>
+
     );
 }
 

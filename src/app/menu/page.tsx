@@ -10,10 +10,11 @@ import {
     DialogTitle,
     DialogDescription
 } from "@/components/ui/dialog";
-import {Search, Plus} from "lucide-react";
+import {Search, Plus, Check} from "lucide-react";
 import {Skeleton} from "@/components/ui/skeleton";
 import {useCart} from "@/components/context/CartContext";
 import {toast} from "sonner";
+import { motion, AnimatePresence } from "framer-motion";
 import Image from "next/image";
 
 interface Menu {
@@ -87,6 +88,7 @@ export default function MenuPage() {
     const [search, setSearch] = useState("");
     const [selectedCategory, setSelectedCategory] = useState("");
     const {addToCart, cartItems} = useCart();
+    const [addedItems, setAddedItems] = useState<number[]>([]);
     const [menus, setMenus] = useState({
         starters: [] as Menu[],
         mainCourses: [] as Menu[],
@@ -140,7 +142,13 @@ export default function MenuPage() {
         } else {
             addToCart({...menu, quantity: 1});
         }
+
+        setAddedItems(prev => [...prev, menu.id]);
         toast.success(`${menu.name} a été ajouté au panier !`);
+
+        setTimeout(() => {
+            setAddedItems(prev => prev.filter(id => id !== menu.id));
+        }, 1000);
     };
 
     const handleViewDetails = (menu: Menu) => {
@@ -189,46 +197,79 @@ export default function MenuPage() {
                         ))}
                     </div>
                 ) : (
-                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 px-3">
-                        {displayMenus.map((menu) => (
-                            <div
-                                key={menu.id}
-                                className="relative rounded-lg cursor-pointer overflow-hidden shadow-lg group"
-                                onClick={() => handleViewDetails(menu)}
-                            >
-                                <div className="h-[200px] w-full relative">
-                                    <Image
-                                        src={menu.image}
-                                        alt={menu.name}
-                                        fill
-                                        className="object-cover transition-transform transform group-hover:scale-110"
-                                    />
-                                    <div className="absolute inset-0 bg-black opacity-40"></div>
-                                    <button
-                                        className="absolute top-1 right-1 rounded-full p-1 cursor-pointer shadow-md transition hover:bg-gray-700 bg-transparent border-0"
-                                        onClick={(e) => {
-                                            e.stopPropagation();
-                                            handleAddToCart(menu);
-                                        }}
-                                        aria-label={`Ajouter ${menu.name} au panier`}
-                                    >
-                                        <Plus size={30} color="white"/>
-                                    </button>
-                                    <div
-                                        className="absolute bottom-0 left-0 w-full p-3 text-white flex justify-between items-end">
-                                        <div>
-                                            <h2 className="text-lg font-bold">{menu.name}</h2>
-                                            <p className="text-sm">{menu.description}</p>
+                    <AnimatePresence mode="wait">
+                        <motion.div
+                            key="menu-grid"
+                            initial={{ opacity: 0 }}
+                            animate={{ opacity: 1 }}
+                            exit={{ opacity: 0 }}
+                            className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 px-3"
+                        >
+                            {displayMenus.map((menu, index) => (
+                                <motion.div
+                                    key={menu.id}
+                                    className="relative rounded-lg cursor-pointer overflow-hidden shadow-lg group"
+                                    onClick={() => handleViewDetails(menu)}
+                                    initial={{ opacity: 0, y: 20 }}
+                                    animate={{ opacity: 1, y: 0 }}
+                                    transition={{ duration: 0.4, delay: index * 0.1 }}
+                                    whileHover={{ scale: 1.03 }}
+                                >
+                                    <div className="h-[200px] w-full relative">
+                                        <Image
+                                            src={menu.image}
+                                            alt={menu.name}
+                                            fill
+                                            className="object-cover transition-transform transform group-hover:scale-110"
+                                        />
+                                        <div className="absolute inset-0 bg-black opacity-40"></div>
+                                        <motion.button
+                                            className="absolute top-1 right-1 rounded-full p-1 cursor-pointer shadow-md transition hover:bg-gray-700 bg-transparent border-0"
+                                            onClick={(e) => {
+                                                e.stopPropagation();
+                                                handleAddToCart(menu);
+                                            }}
+                                            aria-label={`Ajouter ${menu.name} au panier`}
+                                            initial={{ scale: 1 }}
+                                            animate={{ scale: addedItems.includes(menu.id) ? 1.2 : 1 }}
+                                            transition={{ type: "spring", stiffness: 300, damping: 15 }}
+                                        >
+                                            {addedItems.includes(menu.id) ? (
+                                                <motion.span
+                                                    key="check"
+                                                    initial={{ scale: 0, rotate: -180 }}
+                                                    animate={{ scale: 1, rotate: 0 }}
+                                                    exit={{ scale: 0 }}
+                                                    transition={{ duration: 0.3 }}
+                                                >
+                                                    <Check size={30} color="white" />
+                                                </motion.span>
+                                            ) : (
+                                                <motion.span
+                                                    key="plus"
+                                                    initial={{ opacity: 0 }}
+                                                    animate={{ opacity: 1 }}
+                                                    transition={{ duration: 0.2 }}
+                                                >
+                                                    <Plus size={30} color="white" />
+                                                </motion.span>
+                                            )}
+                                        </motion.button>
+                                        <div className="absolute bottom-0 left-0 w-full p-3 text-white flex justify-between items-end">
+                                            <div>
+                                                <h2 className="text-lg font-bold">{menu.name}</h2>
+                                                <p className="text-sm">{menu.description}</p>
+                                            </div>
+                                            <p className="text-md font-semibold">{menu.price}</p>
                                         </div>
-                                        <p className="text-md font-semibold">{menu.price}</p>
                                     </div>
-                                </div>
-                            </div>
-                        ))}
-                        {displayMenus.length === 0 && (
-                            <p className="text-center text-gray-500 col-span-full">Aucun menu trouvé.</p>
-                        )}
-                    </div>
+                                </motion.div>
+                            ))}
+                            {displayMenus.length === 0 && (
+                                <p className="text-center text-gray-500 col-span-full">Aucun menu trouvé.</p>
+                            )}
+                        </motion.div>
+                    </AnimatePresence>
                 )}
                 {selectedMenu && (
                     <Dialog open={!!selectedMenu} onOpenChange={() => setSelectedMenu(null)}>

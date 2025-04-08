@@ -12,6 +12,7 @@ import {useCart} from "@/components/context/CartContext";
 import {Popover, PopoverContent, PopoverTrigger} from "@/components/ui/popover";
 import {usePathname} from "next/navigation";
 
+
 interface HeaderProps {
     userId: string | null;
 }
@@ -32,16 +33,14 @@ export default function Header({userId}: Readonly<HeaderProps>) {
         // Fonction pour gérer le scroll
         const handleScroll = () => {
             if (window.scrollY > 0) {
-                setIsSticky(true); // Ajouter la classe "sticky" si l'utilisateur a scrollé
+                setIsSticky(true);
             } else {
-                setIsSticky(false); // Retirer la classe "sticky" si l'utilisateur est tout en haut
+                setIsSticky(false);
             }
         };
 
-        // Attacher l'écouteur d'événement de scroll
         window.addEventListener("scroll", handleScroll);
 
-        // Nettoyer l'écouteur d'événements au démontage du composant
         return () => {
             window.removeEventListener("scroll", handleScroll);
         };
@@ -49,14 +48,10 @@ export default function Header({userId}: Readonly<HeaderProps>) {
 
     useEffect(() => {
         if (isOpen) {
-            // Désactiver le scroll sur le body
             document.body.style.overflow = 'hidden';
         } else {
-            // Réactiver le scroll sur le body
             document.body.style.overflow = 'auto';
         }
-
-        // Nettoyage au démontage du composant
         return () => {
             document.body.style.overflow = 'auto';
         };
@@ -101,14 +96,27 @@ export default function Header({userId}: Readonly<HeaderProps>) {
                 {/* Menu Desktop */}
                 <nav className="hidden sm:flex items-center space-x-3">
                     {navLinks.map(({href, label}) => (
-                        <Button asChild variant="link" key={href} className="font-bold text-colors-titleGreen md:px-2">
+                        <Button
+                            asChild
+                            variant="link"
+                            key={href}
+                            className={`font-bold text-colors-titleGreen md:px-2 ${
+                                pathname === href ? "underline underline-offset-4 text-colors-titleDarkGreen" : ""
+                            }`}
+                        >
                             <Link href={href}>{label}</Link>
                         </Button>
                     ))}
                     {userId ? (
                         <>
                             {isAdmin && (
-                                <Button asChild variant="link" className="font-bold text-colors-titleGreen">
+                                <Button
+                                    asChild
+                                    variant="link"
+                                    className={`font-bold text-colors-titleGreen ${
+                                        pathname === "/admin" ? "underline underline-offset-4 text-colors-titleDarkGreen" : ""
+                                    }`}
+                                >
                                     <Link href="/admin">Dashboard</Link>
                                 </Button>
                             )}
@@ -116,10 +124,22 @@ export default function Header({userId}: Readonly<HeaderProps>) {
                         </>
                     ) : (
                         <>
-                            <Button asChild variant="link" className="font-bold text-colors-titleGreen">
+                            <Button
+                                asChild
+                                variant="link"
+                                className={`font-bold text-colors-titleGreen ${
+                                    pathname === "/sign-up" ? "underline underline-offset-4 text-colors-titleDarkGreen" : ""
+                                }`}
+                            >
                                 <Link href="/sign-up">Sign up</Link>
                             </Button>
-                            <Button asChild variant="link" className="font-bold text-colors-titleGreen">
+                            <Button
+                                asChild
+                                variant="link"
+                                className={`font-bold text-colors-titleGreen ${
+                                    pathname === "/sign-in" ? "underline underline-offset-4 text-colors-titleDarkGreen" : ""
+                                }`}
+                            >
                                 <Link href="/sign-in">Sign in</Link>
                             </Button>
                         </>
@@ -246,13 +266,14 @@ export default function Header({userId}: Readonly<HeaderProps>) {
                 </div>
 
                 {/* Icône Panier Fixe sur Mobile */}
-                {shouldShowCartIcon && cartCount > 0 &&  (
+                {shouldShowCartIcon && cartCount > 0 && (
                     <Link
                         href="/cart"
                         className="fixed bottom-4 right-4 bg-green-500 text-white p-3 rounded-full shadow-lg flex items-center justify-center sm:hidden z-50"
                     >
-                        <ShoppingCart size={28} />
-                        <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs font-bold w-5 h-5 flex items-center justify-center rounded-full">
+                        <ShoppingCart size={28}/>
+                        <span
+                            className="absolute -top-1 -right-1 bg-red-500 text-white text-xs font-bold w-5 h-5 flex items-center justify-center rounded-full">
                             {cartCount}
                         </span>
                     </Link>

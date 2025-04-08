@@ -21,7 +21,8 @@ const config: Config = {
   		},
   		colors: {
   			colors: {
-  				titleGreen: '#22C55E'
+  				titleGreen: '#49b05e',
+				titleDarkGreen: '#3d6142'
   			},
   			background: 'hsl(var(--background))',
   			foreground: 'hsl(var(--foreground))',
