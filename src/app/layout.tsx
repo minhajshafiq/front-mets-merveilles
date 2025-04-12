@@ -4,7 +4,7 @@ import Header from "@/components/header";
 import Footer from "@/components/footer";
 import "./globals.css";
 import {auth} from "@clerk/nextjs/server";
-import {Instrument_Sans, Poppins} from "@next/font/google";
+import {Instrument_Sans, Poppins} from "next/font/google";
 import {Toaster} from "@/components/ui/sonner";
 import {CartProvider} from "@/components/context/CartContext";
 import StripeProvider from "@/components/providers/StripeProvider";
