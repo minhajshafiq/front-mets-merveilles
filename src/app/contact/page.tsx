@@ -1,9 +1,9 @@
 "use client"
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import { Mail, Phone, Send, CheckCircle } from "lucide-react";
+import { Mail, Phone, Send, CheckCircle, AlertCircle } from "lucide-react";
 import Image from "next/image";
 import { motion, AnimatePresence } from "framer-motion";
 
@@ -15,8 +15,59 @@ export default function ContactForm() {
     const [message, setMessage] = useState("");
     const [isSubmitted, setIsSubmitted] = useState(false);
 
+    const [errors, setErrors] = useState({
+        name: "",
+        email: "",
+        phone: "",
+        subject: "",
+        message: ""
+    });
+
+    // Fonctions de validation
+    const validateEmail = (email: string) => {
+        const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        return regex.test(email) ? "" : "Format d'email invalide";
+    };
+
+    const validatePhone = (phone: string) => {
+        const regex = /^(\+33|0)[1-9](\d{2}){4}$/;
+        return regex.test(phone.replace(/\s/g, "")) ? "" : "Format de téléphone invalide";
+    };
+
+    const validateLength = (value: string, min: number, field: string) => {
+        return value.length < min ? `${field} doit contenir au moins ${min} caractères` : "";
+    };
+
+    // Validation en temps réel
+    useEffect(() => {
+        if (name) setErrors(prev => ({ ...prev, name: validateLength(name, 3, "Le nom") }));
+    }, [name]);
+
+    useEffect(() => {
+        if (email) setErrors(prev => ({ ...prev, email: validateEmail(email) }));
+    }, [email]);
+
+    useEffect(() => {
+        if (phone) setErrors(prev => ({ ...prev, phone: validatePhone(phone) }));
+    }, [phone]);
+
+    useEffect(() => {
+        if (subject) setErrors(prev => ({ ...prev, subject: validateLength(subject, 5, "Le sujet") }));
+    }, [subject]);
+
+    useEffect(() => {
+        if (message) setErrors(prev => ({ ...prev, message: validateLength(message, 10, "Le message") }));
+    }, [message]);
+
+    // Vérifier si le formulaire est valide
+    const isFormValid = () => {
+        return Object.values(errors).every(error => error === "") &&
+            name && email && phone && subject && message;
+    };
+
     const handleSubmit = (e: { preventDefault: () => void }) => {
         e.preventDefault();
+
         console.log({ name, email, phone, subject, message });
         setIsSubmitted(true);
 
@@ -28,6 +79,14 @@ export default function ContactForm() {
             setSubject("");
             setMessage("");
             setIsSubmitted(false);
+            // Réinitialiser les erreurs
+            setErrors({
+                name: "",
+                email: "",
+                phone: "",
+                subject: "",
+                message: ""
+            });
         }, 3000);
     };
 
@@ -80,9 +139,20 @@ export default function ContactForm() {
         }
     };
 
+    const ErrorMessage = ({ message }: { message: string }) => (
+        <motion.div
+            initial={{ opacity: 0, y: -10 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="text-red-500 text-xs mt-1 flex items-center gap-1"
+        >
+            <AlertCircle size={12} />
+            <span>{message}</span>
+        </motion.div>
+    );
+
     return (
         <motion.div
-            className="min-h-screen py-4 px-8 overflow-hidden"
+            className="py-4 px-8 overflow-hidden"
             initial="hidden"
             animate="visible"
             variants={containerVariants}
@@ -233,8 +303,9 @@ export default function ContactForm() {
                                             placeholder="Nom"
                                             value={name}
                                             onChange={(e) => setName(e.target.value)}
-                                            className="transition-all focus:border-green-500 focus:ring-2 focus:ring-green-200"
+                                            className={`transition-all focus:ring-2 ${errors.name ? 'border-red-500 focus:ring-red-200' : 'focus:border-green-500 focus:ring-green-200'}`}
                                         />
+                                        {errors.name && <ErrorMessage message={errors.name} />}
                                     </motion.div>
 
                                     <motion.div
@@ -251,8 +322,9 @@ export default function ContactForm() {
                                             placeholder="Email"
                                             value={email}
                                             onChange={(e) => setEmail(e.target.value)}
-                                            className="transition-all focus:border-green-500 focus:ring-2 focus:ring-green-200"
+                                            className={`transition-all focus:ring-2 ${errors.email ? 'border-red-500 focus:ring-red-200' : 'focus:border-green-500 focus:ring-green-200'}`}
                                         />
+                                        {errors.email && <ErrorMessage message={errors.email} />}
                                     </motion.div>
                                 </motion.div>
 
@@ -270,8 +342,9 @@ export default function ContactForm() {
                                         placeholder="Téléphone"
                                         value={phone}
                                         onChange={(e) => setPhone(e.target.value)}
-                                        className="transition-all focus:border-green-500 focus:ring-2 focus:ring-green-200"
+                                        className={`transition-all focus:ring-2 ${errors.phone ? 'border-red-500 focus:ring-red-200' : 'focus:border-green-500 focus:ring-green-200'}`}
                                     />
+                                    {errors.phone && <ErrorMessage message={errors.phone} />}
                                 </motion.div>
 
                                 <motion.div
@@ -288,8 +361,9 @@ export default function ContactForm() {
                                         placeholder="Sujet"
                                         value={subject}
                                         onChange={(e) => setSubject(e.target.value)}
-                                        className="transition-all focus:border-green-500 focus:ring-2 focus:ring-green-200"
+                                        className={`transition-all focus:ring-2 ${errors.subject ? 'border-red-500 focus:ring-red-200' : 'focus:border-green-500 focus:ring-green-200'}`}
                                     />
+                                    {errors.subject && <ErrorMessage message={errors.subject} />}
                                 </motion.div>
 
                                 <motion.div
@@ -305,18 +379,24 @@ export default function ContactForm() {
                                         placeholder="Votre message..."
                                         value={message}
                                         onChange={(e) => setMessage(e.target.value)}
-                                        className="transition-all focus:border-green-500 focus:ring-2 focus:ring-green-200 min-h-[100px]"
+                                        className={`transition-all focus:ring-2 min-h-[100px] ${errors.message ? 'border-red-500 focus:ring-red-200' : 'focus:border-green-500 focus:ring-green-200'}`}
                                     />
+                                    {errors.message && <ErrorMessage message={errors.message} />}
                                 </motion.div>
 
                                 <motion.div
                                     variants={formFieldVariants}
-                                    whileHover={{ scale: 1.02 }}
-                                    whileTap={{ scale: 0.98 }}
+                                    whileHover={{ scale: isFormValid() ? 1.02 : 1 }}
+                                    whileTap={{ scale: isFormValid() ? 0.98 : 1 }}
                                 >
                                     <Button
                                         type="submit"
-                                        className="w-full sm:w-auto bg-green-500 hover:bg-green-600 text-white py-2 px-4 rounded-lg flex items-center justify-center gap-2"
+                                        className={`w-full sm:w-auto py-2 px-4 rounded-lg flex items-center justify-center gap-2 ${
+                                            isFormValid()
+                                                ? 'bg-green-500 hover:bg-green-600 text-white'
+                                                : 'bg-gray-300 text-gray-600 cursor-not-allowed'
+                                        }`}
+                                        disabled={!isFormValid()}
                                     >
                                         <span>Envoyer</span>
                                         <Send size={16} />

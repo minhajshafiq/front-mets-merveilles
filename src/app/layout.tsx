@@ -5,9 +5,9 @@ import Footer from "@/components/footer";
 import "./globals.css";
 import {auth} from "@clerk/nextjs/server";
 import {Instrument_Sans, Poppins} from "@next/font/google";
-import {Toaster} from "@/components/ui/sonner"
+import {Toaster} from "@/components/ui/sonner";
 import {CartProvider} from "@/components/context/CartContext";
-
+import StripeProvider from "@/components/providers/StripeProvider";
 
 const instrumentSans = Instrument_Sans({
     subsets: ["latin"],
@@ -38,28 +38,25 @@ export default async function RootLayout({
 
     return (
         <ClerkProvider>
+            <html lang="fr">
+            <body className={`${instrumentSans.className} ${poppins.className} antialiased`}>
             <CartProvider>
-                <html lang="en">
-                <body className={`${instrumentSans.className} ${poppins.className} antialiased`}>
-                <div className="flex flex-col min-h-screen">
-                    {/* Header */}
-                    <Header userId={userId}/>
+                <StripeProvider>
+                    <div className="flex flex-col min-h-screen">
+                        {/* Header */}
+                        <Header userId={userId}/>
 
-                    {/* Main Content */}
-                    <main className="flex-grow">
-                        {children}
-                    </main>
+                        {/* Main Content */}
+                        <main className="flex-grow">{children}</main>
 
-                    {/* Footer */}
-                    <Footer />
-                </div>
-
-                <Toaster />
-                </body>
-                </html>
+                        {/* Footer */}
+                        <Footer/>
+                    </div>
+                </StripeProvider>
             </CartProvider>
+            <Toaster/>
+            </body>
+            </html>
         </ClerkProvider>
-
     );
 }
-

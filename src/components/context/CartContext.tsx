@@ -1,4 +1,5 @@
 "use client";
+// Importer les dépendances nécessaires
 import React, { createContext, useContext, useState, useEffect, ReactNode, useMemo } from "react";
 
 // Définir le type pour les éléments du panier

@@ -19,7 +19,7 @@ interface MenuResponse {
 }
 
 export async function GET() {
-    const baseUrl = 'https://back-mets-merveilles-production.up.railway.app';
+    const baseUrl = `${process.env.NEXT_PUBLIC_API_URL}`;
     const url = `${baseUrl}/menus`;
 
     try {

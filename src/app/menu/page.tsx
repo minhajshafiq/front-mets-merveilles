@@ -191,9 +191,40 @@ export default function MenuPage() {
                 </div>
 
                 {loading ? (
-                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 py-12">
-                        {[...Array(8)].map((_, i) => (
-                            <Skeleton key={i} className="w-full h-[200px] rounded-md"/>
+                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 px-3">
+                        {[...Array(16)].map((_, i) => (
+                            <motion.div
+                                key={i}
+                                className="relative rounded-lg overflow-hidden shadow-lg"
+                                initial={{ opacity: 0, y: 20 }}
+                                animate={{ opacity: 1, y: 0 }}
+                                transition={{ duration: 0.4, delay: i * 0.1 }}
+                            >
+                                <div className="h-[200px] w-full relative">
+                                    {/* Image skeleton avec overlay */}
+                                    <Skeleton className="absolute inset-0 w-full h-full" />
+                                    <div className="absolute inset-0 bg-black/20"></div>
+
+                                    {/* Button d'ajout au panier skeleton */}
+                                    <div className="absolute top-2 right-2">
+                                        <Skeleton className="h-8 w-8 rounded-full" />
+                                    </div>
+
+                                    {/* Content overlay skeleton avec positionnement précis */}
+                                    <div className="absolute bottom-0 left-0 w-full p-3">
+                                        <div className="flex justify-between items-end">
+                                            <div className="space-y-1.5 w-4/5">
+                                                <Skeleton className="h-6 w-4/5" /> {/* Titre */}
+                                                <div className="space-y-1">
+                                                    <Skeleton className="h-3 w-full" /> {/* Première ligne description */}
+                                                    <Skeleton className="h-3 w-3/4" /> {/* Seconde ligne description */}
+                                                </div>
+                                            </div>
+                                            <Skeleton className="h-6 w-14 rounded-md" /> {/* Prix */}
+                                        </div>
+                                    </div>
+                                </div>
+                            </motion.div>
                         ))}
                     </div>
                 ) : (
